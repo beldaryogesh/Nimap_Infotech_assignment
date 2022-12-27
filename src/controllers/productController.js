@@ -110,13 +110,6 @@ const createProduct = async function (req, res) {
         .status(400)
         .send({ status: false, msg: 'currencyFormat should be "₹" ' });
     }
-    // -------------------------------style validation---------------------------------------//
-    let bodyFromReq = JSON.parse(JSON.stringify(data));
-    if (bodyFromReq.hasOwnProperty("style"))
-      if (!isValid(style))
-        return res
-          .status(400)
-          .send({ status: false, Message: "Please provide style field" });
     // -------------------------------availableSizes validation-----------------------------//
     if (!availableSizes) {
       return res
