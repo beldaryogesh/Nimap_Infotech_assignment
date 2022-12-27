@@ -3,7 +3,6 @@ const { createProduct } = require('../controllers/productController')
 const router = express.Router()
 const userController = require("../controllers/userController")
 const productController = require("../controllers/productController")
-//const commonMid = require("../middlewares/commonMid")
 
 // ==> User APIs
 
