@@ -2,7 +2,6 @@ const userModel = require("../models/userModel");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const pinValidator = require("pincode-validator");
-const { isValidObjectId } = require("mongoose");
 const {
   isValid,
   nameRegex,
@@ -106,7 +105,7 @@ const registerUser = async (req, res) => {
     if (address) {
       if (
         !isValid(data.address.street) ||
-        !isValid(data.address.city) ||
+        !isValid(data.address.city) ||       // --> // --> address should be provided in the body
         !isValid(data.address.pincode)
       )
         return res.status(400).send({
@@ -115,7 +114,7 @@ const registerUser = async (req, res) => {
         });
       let pinValidated = pinValidator.validate(data.address.pincode);
       if (!pinValidated)
-        return res
+        return res            
           .status(400)
           .send({ status: false, message: "Please enter a valid pincode." });
     }
