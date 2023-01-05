@@ -14,9 +14,7 @@ const myFunc = token => {
     })
 }
 
-
-
-// ==> Authentication function for all the books APIs
+// ==> Authentication function for all the Product APIs
 
 const authenticate = async function (req, res, next) {
     try {
