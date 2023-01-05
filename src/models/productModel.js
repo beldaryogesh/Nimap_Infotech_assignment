@@ -15,9 +15,10 @@ const productSchema = new mongoose.Schema(
       trim: true,
     },
     CategoryId: {
-      type: objectId,
-      required: true,
-      trim: true,
+       type: objectId,
+       required: true,
+       ref: 'Category',
+       trim: true 
     },
     description: {
       type: String,
@@ -55,8 +56,13 @@ const productSchema = new mongoose.Schema(
       type: Number,
       trim: true,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false
+  },
   },
   { timestamps: true }
 );
 
 module.exports = mongoose.model("Product", productSchema);
+

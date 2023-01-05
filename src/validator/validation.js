@@ -18,7 +18,7 @@ let passRegex =/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$
 let numRegex = /^[0-9]*$/;
 let priceReg = /^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/;
 let numsRegex = /^(0|1)$/;
-let categoryIdRegex = /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/;
+
 module.exports = {
   isValid,
   isValidRequestBody,
@@ -29,5 +29,4 @@ module.exports = {
   numRegex,
   priceReg,
   numsRegex,
-  categoryIdRegex,
 };
