@@ -18,6 +18,7 @@ let passRegex =/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$
 let numRegex = /^[0-9]*$/;
 let priceReg = /^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/;
 let numsRegex = /^(0|1)$/;
+let sizeRegex = /^(S|XS|M|X|L|XXL|XL)$/
 
 module.exports = {
   isValid,
@@ -29,4 +30,5 @@ module.exports = {
   numRegex,
   priceReg,
   numsRegex,
+  sizeRegex
 };

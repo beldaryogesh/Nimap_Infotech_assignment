@@ -17,7 +17,7 @@ router.post("/login", userController.loginUser); // --> login for a user
 // ==> Product APIs
 router.post("/createProducts",commonMid.authenticate, productController.createProduct);
 router.get("/products",commonMid.authenticate, productController.getProduct);
-router.put('/products/:productId', commonMid.authenticate, productController.updateProduct)
-router.delete('/products/:productId', commonMid.authenticate, productController.deleteProductById)
+router.put('/products/:productId', commonMid.authenticate, commonMid.authorize,productController.updateProduct)
+router.delete('/products/:productId', commonMid.authenticate,commonMid.authorize, productController.deleteProductById)
 
 module.exports = router; // --> exporting the functions

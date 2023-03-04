@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const pinValidator = require("pincode-validator");
 const {
+  isValidRequestBody,
   isValid,
   nameRegex,
   emailRegex,
@@ -14,7 +15,7 @@ const registerUser = async (req, res) => {
   try {
     let data = req.body;
     let { fname, lname, email, phone, password, address } = data;
-    if (Object.keys(data).length === 0)
+    if (!isValidRequestBody(data))
       return res
         .status(400)
         .send({ status: false, message: "Provide the data in request body." });
@@ -146,7 +147,7 @@ const loginUser = async function (req, res) {
     if (!password)
       return res.status(400).send({
         status: false,
-        msg: "Provide the passeord to login.",
+        msg: "Provide the passeword to login.",
       });
     if (!emailRegex.test(email))
       // --> email should be provided in right format
@@ -169,7 +170,7 @@ const loginUser = async function (req, res) {
       "Nimap_Infotech" // --> secret key
     );
 
-    res.setHeader("x-api-key", token); // to send the token in the header of the browser used by the user.
+    res.setHeader("x-api-key", token);
     return res
       .status(200)
       .send({ status: true, message: "Success", data: token }); // token is shown in the response body.

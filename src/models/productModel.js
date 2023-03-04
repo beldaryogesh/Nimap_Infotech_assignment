@@ -17,9 +17,14 @@ const productSchema = new mongoose.Schema(
     CategoryId: {
        type: objectId,
        required: true,
-       ref: 'Category',
        trim: true 
     },
+    userId: {
+      type: objectId,
+      required: true,
+      //ref: 'Category',
+      trim: true 
+   },
     description: {
       type: String,
       required: true,
@@ -29,12 +34,6 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
       trim: true,
-    },
-    currencyId: {
-      type: String,
-      required: true,
-      trim: true,
-      uppercase: true,
     },
     currencyFormat: {
       type: String,
