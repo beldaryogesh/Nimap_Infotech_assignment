@@ -46,12 +46,10 @@ const createProduct = async function (req, res) {
     }
     const checkUserId = await userModel.findById(userId);
     if (!checkUserId) {
-      return res
-        .status(400)
-        .send({
-          status: false,
-          msg: "userId not exit in your userModel. please create userId after that you are able to creat product",
-        });
+      return res.status(400).send({
+        status: false,
+        msg: "userId not exit in your userModel. please create userId after that you are able to creat product",
+      });
     }
 
     //    --------------------------ProductName validation----------------------------------//
@@ -78,6 +76,17 @@ const createProduct = async function (req, res) {
         .status(400)
         .send({ status: false, msg: "please enter the CategoryName" });
     }
+    let checkCateName = await categoryModel.findOne({
+      CategoryName: CategoryName,
+    });
+    if (!checkCateName) {
+      return res
+        .status(400)
+        .send({
+          status: false,
+          msg: "categoryName is not exit in your database...please create category after that you are able to creat product",
+        });
+    }
 
     // --------------------------categoryId validation----------------------------------//
     if (!isValid(CategoryId)) {
@@ -92,12 +101,10 @@ const createProduct = async function (req, res) {
     }
     const checkCateId = await categoryModel.findById(CategoryId);
     if (!checkCateId) {
-      return res
-        .status(400)
-        .send({
-          status: false,
-          msg: "categoryId not exit in your categoryModel. please create categoryId",
-        });
+      return res.status(400).send({
+        status: false,
+        msg: "categoryId not exit in your categoryModel. please create categoryId",
+      });
     }
     const checkcategoryId = await productModel.findOne({
       CategoryId: CategoryId,
@@ -354,7 +361,7 @@ const updateProduct = async function (req, res) {
       if (CategoryNameData)
         return res
           .status(400)
-          .send({ status: false, msg: `${CategoryName} is already present` });
+          .send({ status: false, msg: `${CategoryName} is already present please provide unique category name for update product` });
     }
     newObj["CategoryName"] = CategoryName;
     //   --------------------------------------description validation------------------------------//
