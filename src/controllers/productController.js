@@ -44,11 +44,14 @@ const createProduct = async function (req, res) {
         .status(400)
         .send({ status: false, msg: "please provide valid userId" });
     }
-    const checkUserId = await userModel.findById(userId)
-    if(!checkUserId){
+    const checkUserId = await userModel.findById(userId);
+    if (!checkUserId) {
       return res
-      .status(400)
-      .send({ status: false, msg: "userId not exit in your userModel. please create userId after that you are able to creat product" });
+        .status(400)
+        .send({
+          status: false,
+          msg: "userId not exit in your userModel. please create userId after that you are able to creat product",
+        });
     }
 
     //    --------------------------ProductName validation----------------------------------//
@@ -87,11 +90,14 @@ const createProduct = async function (req, res) {
         .status(400)
         .send({ status: false, msg: "please provide valid categoryId" });
     }
-    const checkCateId = await categoryModel.findById(CategoryId)
-    if(!checkCateId){
+    const checkCateId = await categoryModel.findById(CategoryId);
+    if (!checkCateId) {
       return res
-      .status(400)
-      .send({ status: false, msg: "categoryId not exit in your categoryModel. please create categoryId" });
+        .status(400)
+        .send({
+          status: false,
+          msg: "categoryId not exit in your categoryModel. please create categoryId",
+        });
     }
     const checkcategoryId = await productModel.findOne({
       CategoryId: CategoryId,
@@ -152,7 +158,7 @@ const createProduct = async function (req, res) {
       if (!numRegex.test(installments)) {
         return res.status(400).send({
           status: false,
-          msg: "please provide installement only numercial value"
+          msg: "please provide installement only numercial value",
         });
       }
     }
@@ -171,19 +177,16 @@ const createProduct = async function (req, res) {
 
 const getProduct = async function (req, res) {
   try {
-    let data = req.body;
-
+    let data = req.query;
     if (!isValidRequestBody(data)) {
-      return res
-        .status(400)
-        .send({
-          status: false,
-          msg: "please provide any query for get product",
-        });
+      return res.status(400).send({
+        status: false,
+        msg: "please provide any query for get product",
+      });
     }
-
     const { ProductId, ProductName, CategoryName, CategoryId } = data;
-    //-------------------------------productId------------------------------------
+    const queryObject = {};
+    //-----------------------------ProductId-------------------------------------
     if (ProductId !== undefined) {
       if (!isValid(ProductId)) {
         return res
@@ -200,11 +203,10 @@ const getProduct = async function (req, res) {
         return res
           .status(404)
           .send({ status: false, msg: "ProductId is not exist in database" });
-      } else {
-        return res.status(200).send({ data: CheckProductId });
       }
+      queryObject.ProductId = ProductId;
     }
-    //-------------------------------ProductName------------------------------------
+    //--------------------------ProductName----------------------------------------
     else if (ProductName !== undefined) {
       if (!isValid(ProductName)) {
         return res
@@ -222,13 +224,12 @@ const getProduct = async function (req, res) {
       if (checkproductName.length == 0) {
         return res.status(404).send({
           status: false,
-          msg: "No such similar peoduct are find by thes productName",
+          msg: "No such similar product are find by thes productName",
         });
-      } else {
-        return res.status(200).send({ status: true, data: checkproductName });
       }
+      queryObject.ProductName = { $regex: ProductName, $options: "i" };
     }
-    //------------------------------- CategoryName ------------------------------------
+    //---------------------------CategoryName---------------------------------------
     else if (CategoryName !== undefined) {
       if (!isValid(CategoryName)) {
         return res
@@ -243,11 +244,10 @@ const getProduct = async function (req, res) {
           status: false,
           msg: "No such similar product are find by the CategoryName",
         });
-      } else {
-        return res.status(200).send({ status: true, data: checkCategoryName });
       }
+      queryObject.CategoryName = { $regex: CategoryName, $options: "i" };
     }
-    //-------------------------------CategoryId------------------------------------
+    //-------------------------------CategoryId-----------------------------------
     else if (CategoryId !== undefined) {
       if (!isValid(CategoryId)) {
         return res
@@ -259,19 +259,29 @@ const getProduct = async function (req, res) {
           .status(400)
           .send({ status: false, msg: "please provide valid CategoryId" });
       }
-      let CheckCategoryId = await productModel.findById({ _id: CategoryId });
-      if (!CheckCategoryId) {
+
+      let checkCateId = await CategoryIdModel.findById({ _id: CategoryId });
+      if (!checkCateId) {
         return res
           .status(404)
           .send({ status: false, msg: "CategoryId is not exist in database" });
-      } else {
-        return res.status(200).send({ data: CheckCategoryId });
       }
+      queryObject.CategoryId = CategoryId;
     }
+    //--------------------------pagination----------------------------------------
+    let apiData = productModel.find(queryObject);
+    let page = Number(req.query.page) || 1;
+    let limit = Number(req.query.limit) || 10;
+    let skip = (page - 1) * limit;
+    apiData = apiData.skip(skip).limit(limit);
+
+    const myData = await apiData;
+    res.status(200).send({ myData, nbHits: myData.length });
   } catch (err) {
     return res.status(500).send({ msg: "Error", error: err.message });
   }
 };
+
 // **********************************************UPDATE PRODUCT*************************************//
 
 const updateProduct = async function (req, res) {
